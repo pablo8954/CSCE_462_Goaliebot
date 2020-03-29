@@ -2,25 +2,25 @@ import RPi.GPIO as GPIO
 import time
 
 while True:
-
+    GPIO.setwarnings(False)
     #left sensor (from robot's perspective)
     GPIO.setmode(GPIO.BCM)
 
     TRIG = 23
     ECHO = 24
 
-    print("Distance Measurement in Progress")
+    #print("Distance Measurement in Progress")
 
     GPIO.setup(TRIG,GPIO.OUT)
     GPIO.setup(ECHO,GPIO.IN)
 
     GPIO.output(TRIG, False)
-    print("Waiting for Sensor To Settle")
-    time.sleep(2)
+    #print("Waiting for Sensor To Settle")
+    #time.sleep(2)
 
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
-    GPIO.otuput(TRIG,False)
+    GPIO.output(TRIG,False)
 
     while GPIO.input (ECHO) == 0:
         pulse_start = time.time()
@@ -35,30 +35,30 @@ while True:
     distance = round(distance, 2)
 
     print ("Left Distance:", distance, "cm")
-
+    GPIO.cleanup()
     # right sensor
     GPIO.setmode(GPIO.BCM)
 
-    TRIG = 17
-    ECHO = 27
+    TRIG2 = 17
+    ECHO2 = 27
 
-    print("Distance Measurement in Progress")
+    #print("Distance Measurement in Progress")
 
-    GPIO.setup(TRIG,GPIO.OUT)
-    GPIO.setup(ECHO,GPIO.IN)
+    GPIO.setup(TRIG2,GPIO.OUT)
+    GPIO.setup(ECHO2,GPIO.IN)
 
-    GPIO.output(TRIG, False)
-    print("Waiting for Sensor To Settle")
-    time.sleep(2)
+    GPIO.output(TRIG2, False)
+    #print("Waiting for Sensor To Settle")
+    #time.sleep(2)
 
-    GPIO.output(TRIG, True)
+    GPIO.output(TRIG2, True)
     time.sleep(0.00001)
-    GPIO.otuput(TRIG,False)
+    GPIO.output(TRIG2,False)
 
-    while GPIO.input (ECHO) == 0:
+    while GPIO.input (ECHO2) == 0:
         pulse_start = time.time()
 
-    while GPIO.input (ECHO) == 1:
+    while GPIO.input (ECHO2) == 1:
         pulse_end = time.time()
 
     pulse_duration = pulse_end - pulse_start
@@ -67,10 +67,10 @@ while True:
 
     distance = round(distance, 2)
 
-    print ("Right Distance:", distance, "cm")
+    print ("Right Distance:", distance, "cm\n")
+    GPIO.cleanup()
 
 
-
-    time.sleep(1)
+    time.sleep(.001)
 
 GPIO.cleanup()
