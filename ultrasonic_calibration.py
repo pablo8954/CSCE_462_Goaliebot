@@ -17,7 +17,7 @@ time.sleep(2)
 
 GPIO.output(TRIG, True)
 time.sleep(0.00001)
-GPIO.otuput(TRIG,False)
+GPIO.output(TRIG,False)
 
 while GPIO.input (ECHO) == 0:
     pulse_start = time.time()

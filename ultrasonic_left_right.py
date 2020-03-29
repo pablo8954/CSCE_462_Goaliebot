@@ -20,7 +20,7 @@ while True:
 
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
-    GPIO.otuput(TRIG,False)
+    GPIO.output(TRIG,False)
 
     while GPIO.input (ECHO) == 0:
         pulse_start = time.time()
@@ -53,7 +53,7 @@ while True:
 
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
-    GPIO.otuput(TRIG,False)
+    GPIO.output(TRIG,False)
 
     while GPIO.input (ECHO) == 0:
         pulse_start = time.time()
@@ -68,8 +68,6 @@ while True:
     distance = round(distance, 2)
 
     print ("Right Distance:", distance, "cm")
-
-
 
     time.sleep(1)
 
