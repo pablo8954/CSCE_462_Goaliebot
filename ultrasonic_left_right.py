@@ -2,21 +2,21 @@ import RPi.GPIO as GPIO
 import time
 
 while True:
-
+    GPIO.setwarnings(False)
     #left sensor (from robot's perspective)
     GPIO.setmode(GPIO.BCM)
 
     TRIG = 23
     ECHO = 24
 
-    print("Distance Measurement in Progress")
+    #print("Distance Measurement in Progress")
 
     GPIO.setup(TRIG,GPIO.OUT)
     GPIO.setup(ECHO,GPIO.IN)
 
     GPIO.output(TRIG, False)
-    print("Waiting for Sensor To Settle")
-    time.sleep(2)
+    #print("Waiting for Sensor To Settle")
+    #time.sleep(2)
 
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
@@ -42,14 +42,14 @@ while True:
     TRIG_right = 17
     ECHO_right = 27
 
-    print("Distance Measurement in Progress")
+    #print("Distance Measurement in Progress")
 
     GPIO.setup(TRIG_right,GPIO.OUT)
     GPIO.setup(ECHO_right,GPIO.IN)
 
     GPIO.output(TRIG_right, False)
-    print("Waiting for Sensor To Settle")
-    time.sleep(2)
+    #print("Waiting for Sensor To Settle")
+    #time.sleep(2)
 
     GPIO.output(TRIG_right, True)
     time.sleep(0.00001)
@@ -67,11 +67,10 @@ while True:
 
     distance = round(distance, 2)
 
-    print ("Right Distance:", distance, "cm")
+    print ("Right Distance:", distance, "cm\n")
     GPIO.cleanup()
-    time.sleep(1)
- 
-## if any distance larger than (400 cm) round down to 400 cm 
+
+    time.sleep(.001)
 
 ##write code for motors - take key input instead of ultrasonic sensor input
 # a - move left
