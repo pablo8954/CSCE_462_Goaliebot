@@ -35,30 +35,30 @@ while True:
     distance = round(distance, 2)
 
     print ("Left Distance:", distance, "cm")
-
+    GPIO.cleanup()
     # right sensor
     GPIO.setmode(GPIO.BCM)
 
-    TRIG = 17
-    ECHO = 27
+    TRIG_right = 17
+    ECHO_right = 27
 
     print("Distance Measurement in Progress")
 
-    GPIO.setup(TRIG,GPIO.OUT)
-    GPIO.setup(ECHO,GPIO.IN)
+    GPIO.setup(TRIG_right,GPIO.OUT)
+    GPIO.setup(ECHO_right,GPIO.IN)
 
-    GPIO.output(TRIG, False)
+    GPIO.output(TRIG_right, False)
     print("Waiting for Sensor To Settle")
     time.sleep(2)
 
-    GPIO.output(TRIG, True)
+    GPIO.output(TRIG_right, True)
     time.sleep(0.00001)
-    GPIO.output(TRIG,False)
+    GPIO.output(TRIG_right,False)
 
-    while GPIO.input (ECHO) == 0:
+    while GPIO.input (ECHO_right) == 0:
         pulse_start = time.time()
 
-    while GPIO.input (ECHO) == 1:
+    while GPIO.input (ECHO_right) == 1:
         pulse_end = time.time()
 
     pulse_duration = pulse_end - pulse_start
@@ -68,7 +68,11 @@ while True:
     distance = round(distance, 2)
 
     print ("Right Distance:", distance, "cm")
-
+    GPIO.cleanup()
     time.sleep(1)
+ 
+## if any distance larger than (400 cm) round down to 400 cm 
 
-GPIO.cleanup()
+##write code for motors - take key input instead of ultrasonic sensor input
+# a - move left
+# d - move right
