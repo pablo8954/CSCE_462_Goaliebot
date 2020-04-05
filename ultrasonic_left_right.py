@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
+rightsensorArray = []
+leftsensorArray = []
 while True:
     GPIO.setwarnings(False)
     #left sensor (from robot's perspective)
@@ -19,7 +21,7 @@ while True:
     #time.sleep(2)
 
     GPIO.output(TRIG, True)
-    time.sleep(0.00001)
+    time.sleep(.01)
     GPIO.output(TRIG,False)
 
     while GPIO.input (ECHO) == 0:
@@ -35,6 +37,7 @@ while True:
     distance = round(distance, 2)
 
     print ("Left Distance:", distance, "cm")
+    #leftsensorArray.append(distance)
     GPIO.cleanup()
     # right sensor
     GPIO.setmode(GPIO.BCM)
@@ -68,9 +71,10 @@ while True:
     distance = round(distance, 2)
 
     print ("Right Distance:", distance, "cm\n")
+    #rightsensorArray.append(distance)
     GPIO.cleanup()
 
-    time.sleep(.001)
+    time.sleep(.01)
 
 ##write code for motors - take key input instead of ultrasonic sensor input
 # a - move left
