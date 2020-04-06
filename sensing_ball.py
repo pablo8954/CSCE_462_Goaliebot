@@ -9,8 +9,8 @@ kit = Motorkit()
 left_trig = 21
 left_echo = 20
 
-right_trig = 25
-right_echo = 24
+right_trig = 19
+right_echo = 26
 
 trig_chan = [left_trig, right_trig]
 echo_chan = [left_echo, right_echo]
@@ -98,3 +98,4 @@ TODO:
 
 - add code so motors run indefinitely until new readings come in saying otherwise
 - adjust sensor tolorence
+"""
