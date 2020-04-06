@@ -92,3 +92,9 @@ def right_readings():
 
 if __name__=="__main__":
     main()
+
+"""
+TODO: 
+
+- add code so motors run indefinitely until new readings come in saying otherwise
+- adjust sensor tolorence
