@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 from adafruit_motorkit import MotorKit 
 import time
 
-kit = Motorkit()
+kit = MotorKit()
 
 #GPIO Mode
 left_trig = 27
@@ -33,7 +33,7 @@ def main():
 
     #be default, motors are off
     kit.motor1.throttle = 0
-    kit.motor3.throttle = 0
+    kit.motor2.throttle = 0
 
     while True:
         GPIO.output(trig_chan, False) #let sensors settle
@@ -44,14 +44,16 @@ def main():
         # move bot left if readings are skewed towards left
         if (left_val < 250 or left_val > 350) and (right_val > 250 and right_val < 350):
             kit.motor1.throttle = 0.5
-            kit.motor3.throttle = 0.5
-            time.sleep(5)
+            kit.motor2.throttle = 0.5
+            print("moving forward")
+            time.sleep(1)
         
         # move bot right if readings are skewed towards right 
         elif (right_val < 250 or right_val > 350) and (left_val > 250 and left_val < 350):
             kit.motor1.throttle = -0.5
-            kit.motor3.throttle = -0.5
-            time.sleep(5)
+            kit.motor2.throttle = -0.5
+            print("moving back")
+            time.sleep(1)
 
 def left_readings():
     
