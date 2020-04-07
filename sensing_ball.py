@@ -1,16 +1,16 @@
 #Libraries
 import RPi.GPIO as GPIO
-from adafruit_motorfruit import MotorKit 
+from adafruit_motorkit import MotorKit 
 import time
 
 kit = Motorkit()
 
 #GPIO Mode
-left_trig = 21
-left_echo = 20
+left_trig = 27
+left_echo = 22
 
-right_trig = 19
-right_echo = 26
+right_trig = 21
+right_echo = 20
 
 trig_chan = [left_trig, right_trig]
 echo_chan = [left_echo, right_echo]
@@ -20,11 +20,11 @@ GPIO.setup(trig_chan, GPIO.OUT)
 GPIO.setup(echo_chan, GPIO.IN)
 
 """
-Note - Direction is described to using the robot's point of view as reference.
+Note - Direction is described using the robot's point of view as reference.
 For example, if an observer were to say "your left eye", you would think of the left eye from your left, not the 
 observer's left (that is, their right).
 
-In regards to the robot, it's left eye would be it's right sensor if you were looking at it face on.
+In regards to the robot, its left eye would be its right sensor if you were looking at it face on.
 
 """
 
@@ -47,6 +47,7 @@ def main():
             kit.motor3.throttle = 0.5
             time.sleep(5)
         
+        # move bot right if readings are skewed towards right 
         elif (right_val < 250 or right_val > 350) and (left_val > 250 and left_val < 350):
             kit.motor1.throttle = -0.5
             kit.motor3.throttle = -0.5
