@@ -12,12 +12,13 @@ left_echo = 22
 right_trig = 21
 right_echo = 20
 
+button = 24
+
 trig_chan = [left_trig, right_trig]
 echo_chan = [left_echo, right_echo]
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(trig_chan, GPIO.OUT)
-GPIO.setup(echo_chan, GPIO.IN)
+run = True
+
 
 """
 Note - Direction is described using the robot's point of view as reference.
@@ -28,32 +29,50 @@ In regards to the robot, its left eye would be its right sensor if you were look
 
 """
 
-
 def main():
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(trig_chan, GPIO.OUT)
+    GPIO.setup(echo_chan, GPIO.IN)
+
+    #button callback to turn robot on & off
+    GPIO.setup(button, GPIO.RISING)
+    GPIO.add_event_callback(button, callButtonEventHandler)
 
     #be default, motors are off
     kit.motor1.throttle = 0
     kit.motor2.throttle = 0
 
     while True:
-        GPIO.output(trig_chan, False) #let sensors settle
-    
-        left_val = left_readings()
-        right_val = right_readings()
-
-        # move bot left if readings are skewed towards left
-        if (left_val < 250 or left_val > 350) and (right_val > 250 and right_val < 350):
-            kit.motor1.throttle = 0.5
-            kit.motor2.throttle = 0.5
-            print("moving forward")
-            time.sleep(1)
+        if run == True:
+            GPIO.output(trig_chan, False) #let sensors settle
         
-        # move bot right if readings are skewed towards right 
-        elif (right_val < 250 or right_val > 350) and (left_val > 250 and left_val < 350):
-            kit.motor1.throttle = -0.5
-            kit.motor2.throttle = -0.5
-            print("moving back")
-            time.sleep(1)
+            left_val = left_readings()
+            right_val = right_readings()
+
+            # move bot left if readings are skewed towards left
+            if (left_val < 250 or left_val > 500) and (right_val > 250 and right_val < 500):
+                kit.motor1.throttle = 0.05
+                kit.motor2.throttle = 0.05
+                print("moving forward")
+                time.sleep(1)
+            
+            # move bot right if readings are skewed towards right 
+            elif (right_val < 250 or right_val > 500) and (left_val > 250 and left_val < 500):
+                kit.motor1.throttle = -0.05
+                kit.motor2.throttle = -0.05
+                print("moving back")
+                time.sleep(1)
+
+            #ball in in center/not in vision - don't move
+            else: 
+                kit.motor1.throttle = 0
+                kit.motor2.throttle = 0
+
+        elif run == False:
+            kit.motor1.throttle = 0
+            kit.motor2.throttle = 0
+
 
 def left_readings():
     
@@ -92,6 +111,8 @@ def right_readings():
 
     return round(distance, 2)
 
+def callButtonEventHandler(pin):
+    run = not run
 
 if __name__=="__main__":
     main()
