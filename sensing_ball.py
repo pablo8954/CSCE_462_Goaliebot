@@ -17,7 +17,7 @@ button = 24
 trig_chan = [left_trig, right_trig]
 echo_chan = [left_echo, right_echo]
 
-run = True
+run = [True]
 
 
 """
@@ -36,7 +36,8 @@ def main():
     GPIO.setup(echo_chan, GPIO.IN)
 
     #button callback to turn robot on & off
-    GPIO.setup(button, GPIO.RISING)
+    GPIO.setup(button, GPIO.IN)
+    GPIO.add_event_detect(button, GPIO.RISING)
     GPIO.add_event_callback(button, callButtonEventHandler)
 
     #be default, motors are off
@@ -44,23 +45,25 @@ def main():
     kit.motor2.throttle = 0
 
     while True:
-        if run == True:
+        if run[0] == True:
             GPIO.output(trig_chan, False) #let sensors settle
         
             left_val = left_readings()
             right_val = right_readings()
+            print(left_val)
+            print(right_val)
 
             # move bot left if readings are skewed towards left
             if (left_val < 250 or left_val > 500) and (right_val > 250 and right_val < 500):
-                kit.motor1.throttle = 0.05
-                kit.motor2.throttle = 0.05
+                kit.motor1.throttle = 0.1
+                kit.motor2.throttle = 0.1
                 print("moving forward")
                 time.sleep(1)
             
             # move bot right if readings are skewed towards right 
             elif (right_val < 250 or right_val > 500) and (left_val > 250 and left_val < 500):
-                kit.motor1.throttle = -0.05
-                kit.motor2.throttle = -0.05
+                kit.motor1.throttle = -0.1
+                kit.motor2.throttle = -0.1
                 print("moving back")
                 time.sleep(1)
 
@@ -68,10 +71,12 @@ def main():
             else: 
                 kit.motor1.throttle = 0
                 kit.motor2.throttle = 0
+                print("standing still")
 
-        elif run == False:
+        elif run[0] == False:
             kit.motor1.throttle = 0
             kit.motor2.throttle = 0
+            
 
 
 def left_readings():
@@ -112,7 +117,7 @@ def right_readings():
     return round(distance, 2)
 
 def callButtonEventHandler(pin):
-    run = not run
+    run[0] = not run[0]
 
 if __name__=="__main__":
     main()

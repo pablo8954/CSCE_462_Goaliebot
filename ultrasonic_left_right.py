@@ -8,8 +8,8 @@ while True:
     #left sensor (from robot's perspective)
     GPIO.setmode(GPIO.BCM)
 
-    TRIG = 23
-    ECHO = 24
+    TRIG = 27
+    ECHO = 22
 
     #print("Distance Measurement in Progress")
 
@@ -42,8 +42,8 @@ while True:
     # right sensor
     GPIO.setmode(GPIO.BCM)
 
-    TRIG_right = 17
-    ECHO_right = 27
+    TRIG_right = 21
+    ECHO_right = 20
 
     #print("Distance Measurement in Progress")
 
