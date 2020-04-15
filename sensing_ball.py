@@ -46,8 +46,7 @@ def main():
 
     while True:
         if run[0] == True:
-            GPIO.output(trig_chan, False) #let sensors settle
-        
+            
             left_val = left_readings()
             right_val = right_readings()
             print(left_val)
@@ -80,7 +79,7 @@ def main():
 
 
 def left_readings():
-    
+    GPIO.output(trig_chan[0], False) #let sensors settle
     GPIO.output(trig_chan[0], True)  
     time.sleep(0.01)
     GPIO.output(trig_chan[0], False) 
@@ -99,7 +98,7 @@ def left_readings():
 
 
 def right_readings():
-    
+    GPIO.output(trig_chan[1],False)
     GPIO.output(trig_chan[1], True) #take reading  
     time.sleep(0.01)
     GPIO.output(trig_chan[1], False) #turn off reading
