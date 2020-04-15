@@ -46,7 +46,7 @@ def main():
 
     while True:
         if run[0] == True:
-            
+            GPIO.setmode(GPIO.BCM);
             # left_val = left_readings()
             # right_val = right_readings()
             # print(left_val)
@@ -83,7 +83,7 @@ def main():
 
             left_val = round(distance, 2)
 
-            print ("Left Distance:", distance, "cm")
+            print ("Left Distance:", left_val, "cm")
             #leftsensorArray.append(distance)
             GPIO.cleanup()
             # right sensor
@@ -117,23 +117,23 @@ def main():
 
             right_val = round(distance, 2)
 
-            print ("Right Distance:", distance, "cm\n")
+            print ("Right Distance:", right_val, "cm\n")
             #rightsensorArray.append(distance)
             GPIO.cleanup()
 
             time.sleep(.01)
 
             # move bot left if readings are skewed towards left
-            if (left_val < 250 or left_val > 500) and (right_val > 250 and right_val < 500):
-                kit.motor1.throttle = 0.1
-                kit.motor2.throttle = 0.1
+            if left_val - right_val > 50:
+                kit.motor1.throttle = 1
+                kit.motor2.throttle = 1
                 print("moving forward")
                 time.sleep(1)
             
             # move bot right if readings are skewed towards right 
-            elif (right_val < 250 or right_val > 500) and (left_val > 250 and left_val < 500):
-                kit.motor1.throttle = -0.1
-                kit.motor2.throttle = -0.1
+            elif right_val - left_val > 50:
+                kit.motor1.throttle = -1
+                kit.motor2.throttle = -1
                 print("moving back")
                 time.sleep(1)
 
