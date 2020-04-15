@@ -35,11 +35,6 @@ def main():
     GPIO.setup(trig_chan, GPIO.OUT)
     GPIO.setup(echo_chan, GPIO.IN)
 
-    #button callback to turn robot on & off
-    GPIO.setup(button, GPIO.IN)
-    GPIO.add_event_detect(button, GPIO.RISING)
-    GPIO.add_event_callback(button, callButtonEventHandler)
-
     #be default, motors are off
     kit.motor1.throttle = 0
     kit.motor2.throttle = 0
@@ -52,6 +47,10 @@ def main():
             # print(left_val)
             # print(right_val)
 
+            #button callback to turn robot on & off
+            GPIO.setup(button, GPIO.IN)
+            GPIO.add_event_detect(button, GPIO.RISING)
+            GPIO.add_event_callback(button, callButtonEventHandler)
             GPIO.setwarnings(False)
             #left sensor (from robot's perspective)
 
@@ -86,6 +85,11 @@ def main():
             print ("Left Distance:", left_val, "cm")
             #leftsensorArray.append(distance)
             GPIO.cleanup()
+
+            #button callback to turn robot on & off
+            GPIO.setup(button, GPIO.IN)
+            GPIO.add_event_detect(button, GPIO.RISING)
+            GPIO.add_event_callback(button, callButtonEventHandler)
             # right sensor
             GPIO.setmode(GPIO.BCM)
 
