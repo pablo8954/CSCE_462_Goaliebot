@@ -53,17 +53,17 @@ def main():
             print(right_val)
 
             # move bot left if readings are skewed towards left
-            if left_val - right_val > 50:
+            if right_val - left_val > 75:
                 kit.motor1.throttle = 0.1
                 kit.motor2.throttle = 0.1
-                print("moving forward")
+                print("moving left")
              
             
             # move bot right if readings are skewed towards right 
-            elif right_val - left_val > 50:
+            elif left_val - right_val > 75:
                 kit.motor1.throttle = -0.1
                 kit.motor2.throttle = -0.1
-                print("moving back")
+                print("moving right")
               
 
             #ball in in center/not in vision - don't move
