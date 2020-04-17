@@ -52,6 +52,9 @@ def main():
             print(left_val)
             print(right_val)
 
+            if (right_val < 0 or left_val < 0):
+                break
+
             # move bot left if readings are skewed towards left
             if right_val - left_val > 75:
                 kit.motor1.throttle = 0.1
@@ -84,17 +87,25 @@ def left_readings():
     time.sleep(0.01)
     GPIO.output(trig_chan[0], False) 
 
+    pulse_start = 0
+    pulse_end = 0
+    while_loop_flag = 0
+
     while GPIO.input(echo_chan[0]) == 0:
         pulse_start = time.time()
-
+        while_loop_flag = while_loop_flag + 1
     while GPIO.input(echo_chan[0]) == 1:
-         pulse_end = time.time()
+        pulse_end = time.time()
+        while_loop_flag = while_loop_flag + 1
 
-    pulse_duration = pulse_end - pulse_start
+    if while_loop_flag == 2:
+        pulse_duration = pulse_end - pulse_start
+        distance = pulse_duration * 171250
+        distance = round(distance, 2)/10
 
-    distance = pulse_duration * 171250
+    else:   
+        distance = -1
 
-    distance = round(distance, 2)/10
     return distance
 
 
@@ -104,17 +115,25 @@ def right_readings():
     time.sleep(0.01)
     GPIO.output(trig_chan[1], False) #turn off reading
 
+    pulse_start = 0
+    pulse_end = 0
+    while_loop_flag = 0
+
     while GPIO.input(echo_chan[1]) == 0:
         pulse_start = time.time()
+        while_loop_flag = while_loop_flag + 1
 
     while GPIO.input(echo_chan[1]) == 1:
          pulse_end = time.time()
+         while_loop_flag = while_loop_flag + 1
 
-    pulse_duration = pulse_end - pulse_start
+    if while_loop_flag == 2:
+        pulse_duration = pulse_end - pulse_start
+        distance = pulse_duration * 171250
+        distance = round(distance, 2)/10
 
-    distance = pulse_duration * 171250
-
-    distance = round(distance, 2)/10
+    else:
+        distance = -1
     return distance
 
 def callButtonEventHandler(pin):
