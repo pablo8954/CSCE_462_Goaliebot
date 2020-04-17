@@ -31,6 +31,7 @@ In regards to the robot, its left eye would be its right sensor if you were look
 
 def main():
 
+    time.sleep(5);
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(trig_chan, GPIO.OUT)
     GPIO.setup(echo_chan, GPIO.IN)
@@ -42,18 +43,13 @@ def main():
     while True:
         if run[0] == True:
             GPIO.setmode(GPIO.BCM);
-            # left_val = left_readings()
-            # right_val = right_readings()
-            # print(left_val)
-            # print(right_val)
-
             #button callback to turn robot on & off
             GPIO.setup(button, GPIO.IN)
             GPIO.add_event_detect(button, GPIO.RISING)
             GPIO.add_event_callback(button, callButtonEventHandler)
             GPIO.setwarnings(False)
-            #left sensor (from robot's perspective)
 
+            #left sensor (from robot's perspective)
             TRIG = 27
             ECHO = 22
 
@@ -81,18 +77,19 @@ def main():
             distance = pulse_duration *17150
 
             left_val = round(distance, 2)
+            if left_val > 500:
+                left_val = 500;
 
             print ("Left Distance:", left_val, "cm")
             #leftsensorArray.append(distance)
             GPIO.cleanup()
+            GPIO.setmode(GPIO.BCM)
 
             #button callback to turn robot on & off
             GPIO.setup(button, GPIO.IN)
             GPIO.add_event_detect(button, GPIO.RISING)
             GPIO.add_event_callback(button, callButtonEventHandler)
             # right sensor
-            GPIO.setmode(GPIO.BCM)
-
             TRIG_right = 21
             ECHO_right = 20
 
@@ -120,11 +117,18 @@ def main():
             distance = pulse_duration *17150
 
             right_val = round(distance, 2)
+            if right_val > 500:
+                right_val = 500
 
             print ("Right Distance:", right_val, "cm\n")
             #rightsensorArray.append(distance)
             GPIO.cleanup()
-
+            
+            #button callback to turn robot on & off
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(button, GPIO.IN)
+            GPIO.add_event_detect(button, GPIO.RISING)
+            GPIO.add_event_callback(button, callButtonEventHandler)
             time.sleep(.01)
 
             # move bot left if readings are skewed towards left
@@ -132,14 +136,14 @@ def main():
                 kit.motor1.throttle = 1
                 kit.motor2.throttle = 1
                 print("moving forward")
-                time.sleep(1)
+                
             
             # move bot right if readings are skewed towards right 
             elif right_val - left_val > 50:
                 kit.motor1.throttle = -1
                 kit.motor2.throttle = -1
                 print("moving back")
-                time.sleep(1)
+                
 
             #ball in in center/not in vision - don't move
             else: 
@@ -148,48 +152,10 @@ def main():
                 print("standing still")
 
         elif run[0] == False:
+
             kit.motor1.throttle = 0
             kit.motor2.throttle = 0
             
-
-
-def left_readings():
-    GPIO.output(trig_chan[0], False) #let sensors settle
-    GPIO.output(trig_chan[0], True)  
-    time.sleep(0.01)
-    GPIO.output(trig_chan[0], False) 
-
-    while GPIO.input(echo_chan[0]) == 0:
-        pulse_start = time.time()
-
-    while GPIO.input(echo_chan[0]) == 1:
-         pulse_end = time.time()
-
-    pulse_duration = pulse_end - pulse_start
-
-    distance = pulse_duration * 171250
-
-    return round(distance, 2)
-
-
-def right_readings():
-    GPIO.output(trig_chan[1],False)
-    GPIO.output(trig_chan[1], True) #take reading  
-    time.sleep(0.01)
-    GPIO.output(trig_chan[1], False) #turn off reading
-
-    while GPIO.input(echo_chan[1]) == 0:
-        pulse_start = time.time()
-
-    while GPIO.input(echo_chan[1]) == 1:
-         pulse_end = time.time()
-
-    pulse_duration = pulse_end - pulse_start
-
-    distance = pulse_duration * 171250
-
-    return round(distance, 2)
-
 def callButtonEventHandler(pin):
     run[0] = not run[0]
 
