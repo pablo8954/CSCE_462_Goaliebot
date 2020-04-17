@@ -31,10 +31,10 @@ In regards to the robot, its left eye would be its right sensor if you were look
 
 def main():
 
-    time.sleep(5);
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(trig_chan, GPIO.OUT)
-    GPIO.setup(echo_chan, GPIO.IN)
+    time.sleep(5)
+    # GPIO.setmode(GPIO.BCM)
+    # GPIO.setup(trig_chan, GPIO.OUT)
+    # GPIO.setup(echo_chan, GPIO.IN)
 
     #be default, motors are off
     kit.motor1.throttle = 0
@@ -42,7 +42,7 @@ def main():
 
     while True:
         if run[0] == True:
-            GPIO.setmode(GPIO.BCM);
+            GPIO.setmode(GPIO.BCM)
             #button callback to turn robot on & off
             GPIO.setup(button, GPIO.IN)
             GPIO.add_event_detect(button, GPIO.RISING)
@@ -78,7 +78,7 @@ def main():
 
             left_val = round(distance, 2)
             if left_val > 500:
-                left_val = 500;
+                left_val = 500
 
             print ("Left Distance:", left_val, "cm")
             #leftsensorArray.append(distance)
@@ -124,12 +124,12 @@ def main():
             #rightsensorArray.append(distance)
             GPIO.cleanup()
             
-            #button callback to turn robot on & off
-            GPIO.setmode(GPIO.BCM)
-            GPIO.setup(button, GPIO.IN)
-            GPIO.add_event_detect(button, GPIO.RISING)
-            GPIO.add_event_callback(button, callButtonEventHandler)
-            time.sleep(.01)
+            # #button callback to turn robot on & off
+            # GPIO.setmode(GPIO.BCM)
+            # GPIO.setup(button, GPIO.IN)
+            # GPIO.add_event_detect(button, GPIO.RISING)
+            # GPIO.add_event_callback(button, callButtonEventHandler)
+            # time.sleep(.01)
 
             # move bot left if readings are skewed towards left
             if left_val - right_val > 50:
