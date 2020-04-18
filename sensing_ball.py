@@ -1,5 +1,7 @@
 #Libraries
 import RPi.GPIO as GPIO
+from gpiozero import LED
+
 from adafruit_motorkit import MotorKit 
 import time
 
@@ -14,10 +16,14 @@ right_echo = 20
 
 button = 24
 
+red_left = LED(5)
+red_center = LED(6)
+green = LED(12)
+
 trig_chan = [left_trig, right_trig]
 echo_chan = [left_echo, right_echo]
 
-run = [True]
+run = [False]
 
 
 """
@@ -30,7 +36,6 @@ In regards to the robot, its left eye would be its right sensor if you were look
 """
 
 def main():
-
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(trig_chan, GPIO.OUT)
     GPIO.setup(echo_chan, GPIO.IN)
@@ -46,7 +51,6 @@ def main():
 
     while True:
         if run[0] == True:
-            
             left_val = left_readings()
             right_val = right_readings()
             print(left_val)
@@ -136,15 +140,24 @@ def right_readings():
         distance = -1
     return distance
 
-def callButtonEventHandler(pin):
+#reset device (either turn on or off)
+def callButtonEventHandler(pin): 
+    
+    #countdown to start only if device is being turned on
+    if run[0] == False:
+        red_left.on()
+        time.sleep(2)
+        red_left.off()
+        red_center.on()
+        time.sleep(2)
+        red_center.off()
+        green.on()
+        time.sleep(2)
+
+    #set flag to opposite (either turn on or off)
     run[0] = not run[0]
+
+
 
 if __name__=="__main__":
     main()
-
-"""
-TODO: 
-
-- add code so motors run indefinitely until new readings come in saying otherwise
-- adjust sensor tolorence
-"""
