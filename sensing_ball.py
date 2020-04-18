@@ -53,8 +53,8 @@ def main():
         if run[0] == True:
             left_val = left_readings()
             right_val = right_readings()
-            print(left_val)
-            print(right_val)
+            print("Left: " + left_val)
+            print("Right: " + right_val)
 
             if (right_val < 0 or left_val < 0):
                 break
