@@ -16,9 +16,9 @@ right_echo = 20
 
 button = 24
 
-red_left = LED(5)
-red_center = LED(6)
-green = LED(12)
+red_left = LED(12)
+red_center = LED(16)
+green = LED(5)
 
 trig_chan = [left_trig, right_trig]
 echo_chan = [left_echo, right_echo]
