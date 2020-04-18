@@ -48,6 +48,7 @@ def main():
     #be default, motors are off
     kit.motor1.throttle = 0
     kit.motor2.throttle = 0
+    throttle_speed = 0.5
 
     while True:
         if run[0] == True:
@@ -58,18 +59,18 @@ def main():
 
             if (right_val < 0 or left_val < 0):
                 break
-
+        
             # move bot left if readings are skewed towards left
             if right_val - left_val > 75:
-                kit.motor1.throttle = 0.1
-                kit.motor2.throttle = 0.1
+                kit.motor1.throttle = throttle_speed
+                kit.motor2.throttle = throttle_speed
                 print("moving left")
              
             
             # move bot right if readings are skewed towards right 
             elif left_val - right_val > 75:
-                kit.motor1.throttle = -0.1
-                kit.motor2.throttle = -0.1
+                kit.motor1.throttle = -throttle_speed
+                kit.motor2.throttle = -throttle_speed
                 print("moving right")
               
 
@@ -106,7 +107,10 @@ def left_readings():
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 171250
         distance = round(distance, 2)/10
-
+        
+        if distance > 400:
+            distance = 400
+    
     else:   
         distance = -1
 
@@ -136,8 +140,12 @@ def right_readings():
         distance = pulse_duration * 171250
         distance = round(distance, 2)/10
 
+        if distance > 400:
+            distance = 400
+
     else:
         distance = -1
+
     return distance
 
 #reset device (either turn on or off)
