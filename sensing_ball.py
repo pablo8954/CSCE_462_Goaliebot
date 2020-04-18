@@ -84,8 +84,6 @@ def main():
             kit.motor1.throttle = 0
             kit.motor2.throttle = 0
             
-
-
 def left_readings():
     GPIO.output(trig_chan[0], False) #let sensors settle
     GPIO.output(trig_chan[0], True)  
