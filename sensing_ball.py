@@ -106,8 +106,8 @@ def left_readings():
         distance = pulse_duration * 171250
         distance = round(distance, 2)/10
         
-        if distance > 400:
-            distance = 400
+        # if distance > 400:
+        #     distance = 400
     
     else:   
         distance = -1
@@ -138,8 +138,8 @@ def right_readings():
         distance = pulse_duration * 171250
         distance = round(distance, 2)/10
 
-        if distance > 400:
-            distance = 400
+        # if distance > 400:
+        #     distance = 400
 
     else:
         distance = -1
