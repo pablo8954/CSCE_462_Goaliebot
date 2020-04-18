@@ -48,7 +48,7 @@ def main():
     #be default, motors are off
     kit.motor1.throttle = 0
     kit.motor2.throttle = 0
-    throttle_speed = 0.5
+    throttle_speed = 0.8
 
     while True:
         if run[0] == True:
@@ -153,18 +153,21 @@ def callButtonEventHandler(pin):
     
     #countdown to start only if device is being turned on
     if run[0] == False:
+        # 6 seconds to get into position
+        green.off()
         red_left.on()
         time.sleep(2)
+
         red_left.off()
         red_center.on()
         time.sleep(2)
+        
         red_center.off()
         green.on()
         time.sleep(2)
 
     #set flag to opposite (either turn on or off)
     run[0] = not run[0]
-
 
 
 if __name__=="__main__":
