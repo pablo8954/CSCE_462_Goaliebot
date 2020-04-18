@@ -60,8 +60,14 @@ def main():
             if (right_val < 0 or left_val < 0):
                 break
         
+            if left_val > 1750:
+                kit.motor1.throttle = throttle_speed
+                kit.motor2.throttle = throttle_speed
+                print("moving left")               
+
+
             # move bot left if readings are skewed towards left
-            if right_val - left_val > 75:
+            elif right_val - left_val > 75:
                 kit.motor1.throttle = throttle_speed
                 kit.motor2.throttle = throttle_speed
                 print("moving left")
