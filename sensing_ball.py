@@ -102,7 +102,7 @@ def left_readings():
         pulse_end = time.time()
         while_loop_flag = while_loop_flag + 1
 
-    if while_loop_flag != 0:
+    if while_loop_flag > 1:
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 171250
         distance = round(distance, 2)/10
@@ -131,7 +131,7 @@ def right_readings():
          pulse_end = time.time()
          while_loop_flag = while_loop_flag + 1
 
-    if while_loop_flag != 0:
+    if while_loop_flag > 1:
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 171250
         distance = round(distance, 2)/10
