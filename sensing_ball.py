@@ -8,11 +8,17 @@ import time
 kit = MotorKit()
 
 #GPIO Mode
-left_trig = 27
-left_echo = 22
+# left_trig = 27
+# left_echo = 22
 
-right_trig = 21
-right_echo = 20
+# right_trig = 21
+# right_echo = 20
+
+left_trig = 21
+left_echo = 20
+
+right_trig = 27
+right_echo = 22
 
 button = 24
 
@@ -53,6 +59,7 @@ def main():
         if run[0] == True:
             left_val = left_readings()
             right_val = right_readings()
+
             print("Left: ", left_val)
             print("Right: ", right_val)
 
