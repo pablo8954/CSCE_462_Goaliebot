@@ -25,6 +25,7 @@ echo_chan = [left_echo, right_echo]
 
 run = [False]
 
+left_right_flags = [False, False] # [left, right]
 
 """
 Note - Direction is described using the robot's point of view as reference.
@@ -48,7 +49,7 @@ def main():
     #be default, motors are off
     kit.motor1.throttle = 0
     kit.motor2.throttle = 0
-    throttle_speed = 0.8
+    throttle_speed = 1
 
     while True:
         if run[0] == True:
@@ -57,6 +58,7 @@ def main():
             print("Left: ", left_val)
             print("Right: ", right_val)
 
+            #bad reading - try again
             if (right_val < 0 or left_val < 0):
                 break
         
@@ -67,20 +69,24 @@ def main():
 
 
             # move bot left if readings are skewed towards left
-            elif right_val - left_val > 75:
+            elif right_val - left_val > 100 or left_right_flags[0] == True:
                 kit.motor1.throttle = throttle_speed
                 kit.motor2.throttle = throttle_speed
                 print("moving left")
-             
+                if left_right_flags[0] == False:
+                    left_right_flags[0] = True
+                    left_right_flags[1] = False
             
             # move bot right if readings are skewed towards right 
-            elif left_val - right_val > 75:
+            elif left_val - right_val > 100 or left_right_flags[1] == True:
                 kit.motor1.throttle = -throttle_speed
                 kit.motor2.throttle = -throttle_speed
                 print("moving right")
-              
+                if left_right_flags[1] == False:
+                    left_right_flags[0] = False
+                    left_right_flags[1] = True
 
-            #ball in in center/not in vision - don't move
+            #ball in in center - don't move
             else: 
                 kit.motor1.throttle = 0
                 kit.motor2.throttle = 0
@@ -103,6 +109,7 @@ def left_readings():
     while GPIO.input(echo_chan[0]) == 0:
         pulse_start = time.time()
         while_loop_flag = while_loop_flag + 1
+        
     while GPIO.input(echo_chan[0]) == 1:
         pulse_end = time.time()
         while_loop_flag = while_loop_flag + 1
