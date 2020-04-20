@@ -49,7 +49,7 @@ def main():
     #be default, motors are off
     kit.motor1.throttle = 0
     kit.motor2.throttle = 0
-    throttle_speed = 1
+    throttle_speed = 0.5
 
     while True:
         if run[0] == True:
