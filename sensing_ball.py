@@ -25,8 +25,6 @@ echo_chan = [left_echo, right_echo]
 
 run = [False]
 
-left_right_flags = [False, False] # [left, right]
-
 """
 Note - Direction is described using the robot's point of view as reference.
 For example, if an observer were to say "your left eye", you would think of the left eye from your left, not the 
@@ -67,25 +65,21 @@ def main():
                 kit.motor2.throttle = throttle_speed
                 print("moving left")               
 
-
+            #case 1 
             # move bot left if readings are skewed towards left
-            elif right_val - left_val > 100 or left_right_flags[0] == True:
+            elif right_val - left_val > 100:
                 kit.motor1.throttle = throttle_speed
                 kit.motor2.throttle = throttle_speed
                 print("moving left")
-                if left_right_flags[0] == False:
-                    left_right_flags[0] = True
-                    left_right_flags[1] = False
             
+            #case 2
             # move bot right if readings are skewed towards right 
-            elif left_val - right_val > 100 or left_right_flags[1] == True:
+            elif left_val - right_val > 100:
                 kit.motor1.throttle = -throttle_speed
                 kit.motor2.throttle = -throttle_speed
                 print("moving right")
-                if left_right_flags[1] == False:
-                    left_right_flags[0] = False
-                    left_right_flags[1] = True
 
+            #case 3
             #ball in in center - don't move
             else: 
                 kit.motor1.throttle = 0
