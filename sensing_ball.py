@@ -67,29 +67,29 @@ def main():
             left - good
 
             """
-            # if (right_val > 1750):
-            #     right_sees_ball = True
-            # if (left_val > 1750):
-            #     left_sees_ball = True
+            if (right_val > 1750):
+                right_sees_ball = True
+            if (left_val > 1750):
+                left_sees_ball = True
 
-            # if (left_val < 200):
+            if (left_val < 300):
+                left_sees_ball = True
+            if (right_val < 300):
+                right_sees_ball = True
+            
+            # #if movement is detected behind our "boundary line", move the opposite direction as read in attempt to preemtively position itself to block ball
+            # boundaryLine = 250
+            # if right_val < 1750 and right_val > boundaryLine:
+            #     throttle_speed = 0.7 #set speed to half to creep on ball if detected movement behind boundary line
             #     left_sees_ball = True
-            # if (right_val < 200):
+            # else:   #right_val < 250 or right_val =1750 (close)
             #     right_sees_ball = True
             
-            #if movement is detected behind our "boundary line", move the opposite direction as read in attempt to preemtively position itself to block ball
-            boundaryLine = 250
-            if right_val < 1750 and right_val > boundaryLine:
-                throttle_speed = 0.7 #set speed to half to creep on ball if detected movement behind boundary line
-                left_sees_ball = True
-            else:   #right_val < 250 or right_val =1750 (close)
-                right_sees_ball = True
-            
-            if left_val < 1750 and left_val > boundaryLine:
-                throttle_speed = 0.7
-                right_sees_ball = True
-            else:   #left_val < 250 or left_val =1750 (close)
-                left_sees_ball = True
+            # if left_val < 1750 and left_val > boundaryLine:
+            #     throttle_speed = 0.7
+            #     right_sees_ball = True
+            # else:   #left_val < 250 or left_val =1750 (close)
+            #     left_sees_ball = True
 
             #bad reading from ultrasonic sensors - try again
             if (right_val < 0 or left_val < 0):
