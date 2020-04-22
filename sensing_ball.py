@@ -14,7 +14,6 @@ left_echo = 22
 right_trig = 21
 right_echo = 20
 
-
 button = 24
 
 red_left = LED(12)
@@ -48,10 +47,12 @@ def main():
     #be default, motors are off
     kit.motor1.throttle = 0
     kit.motor2.throttle = 0
-    throttle_speed = 1.0
 
     while True:
         if run[0] == True:
+
+            throttle_speed = 1.0
+
             left_val = left_readings()
             right_val = right_readings()
 
@@ -61,84 +62,56 @@ def main():
             left_sees_ball = False
             right_sees_ball = False
 
-            if (right_val > 1750):
-                right_sees_ball = True
-            if (left_val > 1750):
-                left_sees_ball = True
-            if (left_val < 200):
-                left_sees_ball = True
-            if (right_val < 200):
-                right_sees_ball = True
+            """
+            right - broken
+            left - good
 
-            #bad reading - try again
+            """
+            # if (right_val > 1750):
+            #     right_sees_ball = True
+            # if (left_val > 1750):
+            #     left_sees_ball = True
+
+            # if (left_val < 200):
+            #     left_sees_ball = True
+            # if (right_val < 200):
+            #     right_sees_ball = True
+            
+            #if movement is detected behind our "boundary line", move the opposite direction as read in attempt to preemtively position itself to block ball
+            boundaryLine = 250
+            if right_val < 1750 and right_val > boundaryLine:
+                throttle_speed = 0.7 #set speed to half to creep on ball if detected movement behind boundary line
+                left_sees_ball = True
+            else:   #right_val < 250 or right_val =1750 (close)
+                right_sees_ball = True
+            
+            if left_val < 1750 and left_val > boundaryLine:
+                throttle_speed = 0.7
+                right_sees_ball = True
+            else:   #left_val < 250 or left_val =1750 (close)
+                left_sees_ball = True
+
+            #bad reading from ultrasonic sensors - try again
             if (right_val < 0 or left_val < 0):
                 break               
-            #case 1
-            elif right_sees_ball and left_sees_ball:
+
+            #case 1 - when the ball is in the center - either both sensors read the ball or read nothing in front
+            elif (right_sees_ball and left_sees_ball) or (not right_sees_ball and not left_sees_ball):
                 kit.motor1.throttle = 0
                 kit.motor2.throttle = 0
                 print("standing still")
 
+            #case 2 - ball is in front of right sensor -> strafe right
             elif right_sees_ball:
                 kit.motor1.throttle = -throttle_speed
                 kit.motor2.throttle = -throttle_speed
                 print("moving right")
             
+            #case 3 - ball is in right of left sensor -> strafe left
             elif left_sees_ball:
                 kit.motor1.throttle = throttle_speed
                 kit.motor2.throttle = throttle_speed
                 print("moving left")
-            
-            else:
-                kit.motor1.throttle = 0
-                kit.motor2.throttle = 0
-                print("standing still")  
-
-            """
-            right - broken
-            left - good
-
-            case 1 center ball:
-            right sensor = 2000 or 60
-            left sensor = 60
-                ACTION: STAND STILL
-            
-            
-            case 2 ball is in front of right sensor only:
-            right sensor = 2000 or 60
-            left sensor = 350 (wall)
-            if (right sensor = 2000 or 60 && left sensor == wall)
-                    ACTION: MOVE RIGHT
-
-            case 3 ball is in front of left sensor only:
-            right sensor = 350 (wall)
-            left sensor = 60
-                ACTION: MOVE LEFT
-        
-            """
-
-            # #case 1 
-           
-            # #ball in in center - don't move
-            # elif right_sees_ball and left_sees_ball:
-            #     kit.motor1.throttle = 0
-            #     kit.motor2.throttle = 0
-            #     print("standing still")
-                
-            
-            # #case 2
-            # # move bot right if readings are skewed towards right 
-            # elif right_sees_ball:
-            #     kit.motor1.throttle = -throttle_speed
-            #     kit.motor2.throttle = -throttle_speed
-            #     print("moving right")
-
-            # #case 3
-            # # move bot left if readings are skewed towards left
-            # else: 
-            #     kit.motor1.throttle = throttle_speed
-            #     kit.motor2.throttle = throttle_speed
-            #     print("moving left")
 
         elif run[0] == False:
             kit.motor1.throttle = 0
