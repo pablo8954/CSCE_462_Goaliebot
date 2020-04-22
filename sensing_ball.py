@@ -48,7 +48,7 @@ def main():
     #be default, motors are off
     kit.motor1.throttle = 0
     kit.motor2.throttle = 0
-    throttle_speed = 0.5
+    throttle_speed = 1.0
 
     while True:
         if run[0] == True:
@@ -65,9 +65,9 @@ def main():
                 right_sees_ball = True
             if (left_val > 1750):
                 left_sees_ball = True
-            if (left_val < 300):
+            if (left_val < 200):
                 left_sees_ball = True
-            if (right_val < 300):
+            if (right_val < 200):
                 right_sees_ball = True
 
             #bad reading - try again
