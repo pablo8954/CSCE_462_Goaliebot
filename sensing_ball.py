@@ -8,17 +8,12 @@ import time
 kit = MotorKit()
 
 #GPIO Mode
-# left_trig = 27
-# left_echo = 22
+left_trig = 27
+left_echo = 22
 
-# right_trig = 21
-# right_echo = 20
+right_trig = 21
+right_echo = 20
 
-left_trig = 21
-left_echo = 20
-
-right_trig = 27
-right_echo = 22
 
 button = 24
 
@@ -63,35 +58,87 @@ def main():
             print("Left: ", left_val)
             print("Right: ", right_val)
 
+            left_sees_ball = False
+            right_sees_ball = False
+
+            if (right_val > 1750):
+                right_sees_ball = True
+            if (left_val > 1750):
+                left_sees_ball = True
+            if (left_val < 300):
+                left_sees_ball = True
+            if (right_val < 300):
+                right_sees_ball = True
+
             #bad reading - try again
             if (right_val < 0 or left_val < 0):
-                break
-        
-            if left_val > 1750:
-                kit.motor1.throttle = throttle_speed
-                kit.motor2.throttle = throttle_speed
-                print("moving left")               
+                break               
+            #case 1
+            elif right_sees_ball and left_sees_ball:
+                kit.motor1.throttle = 0
+                kit.motor2.throttle = 0
+                print("standing still")
 
-            #case 1 
-            # move bot left if readings are skewed towards left
-            elif right_val - left_val > 100:
+            elif right_sees_ball:
+                kit.motor1.throttle = -throttle_speed
+                kit.motor2.throttle = -throttle_speed
+                print("moving right")
+            
+            elif left_sees_ball:
                 kit.motor1.throttle = throttle_speed
                 kit.motor2.throttle = throttle_speed
                 print("moving left")
             
-            #case 2
-            # move bot right if readings are skewed towards right 
-            elif left_val - right_val > 100:
-                kit.motor1.throttle = -throttle_speed
-                kit.motor2.throttle = -throttle_speed
-                print("moving right")
-
-            #case 3
-            #ball in in center - don't move
-            else: 
+            else:
                 kit.motor1.throttle = 0
                 kit.motor2.throttle = 0
-                print("standing still")
+                print("standing still")  
+
+            """
+            right - broken
+            left - good
+
+            case 1 center ball:
+            right sensor = 2000 or 60
+            left sensor = 60
+                ACTION: STAND STILL
+            
+            
+            case 2 ball is in front of right sensor only:
+            right sensor = 2000 or 60
+            left sensor = 350 (wall)
+            if (right sensor = 2000 or 60 && left sensor == wall)
+                    ACTION: MOVE RIGHT
+
+            case 3 ball is in front of left sensor only:
+            right sensor = 350 (wall)
+            left sensor = 60
+                ACTION: MOVE LEFT
+        
+            """
+
+            # #case 1 
+           
+            # #ball in in center - don't move
+            # elif right_sees_ball and left_sees_ball:
+            #     kit.motor1.throttle = 0
+            #     kit.motor2.throttle = 0
+            #     print("standing still")
+                
+            
+            # #case 2
+            # # move bot right if readings are skewed towards right 
+            # elif right_sees_ball:
+            #     kit.motor1.throttle = -throttle_speed
+            #     kit.motor2.throttle = -throttle_speed
+            #     print("moving right")
+
+            # #case 3
+            # # move bot left if readings are skewed towards left
+            # else: 
+            #     kit.motor1.throttle = throttle_speed
+            #     kit.motor2.throttle = throttle_speed
+            #     print("moving left")
 
         elif run[0] == False:
             kit.motor1.throttle = 0
