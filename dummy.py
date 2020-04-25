@@ -1,25 +1,67 @@
 #Libraries
-import RPi.GPIO as GPIO
-from gpiozero import LED
+# import RPi.GPIO as GPIO
+# from gpiozero import LED
 
-from adafruit_motorkit import MotorKit 
+# from adafruit_motorkit import MotorKit 
 import time
 import tkinter as tk
-import RPi.GPIO as GPIO
-from gpiozero import LED
 
-from adafruit_motorkit import MotorKit 
-import time
+# kit = MotorKit()
 
+#GPIO mode
+left_trig = 27
+left_echo = 22
 
+right_trig = 21
+right_echo = 20
+
+button = 24
+
+# red_left = LED(12)
+# red_center = LED(16)
+# green = LED(5)
+
+trig_chan = [left_trig, right_trig]
+echo_chan = [left_echo, right_echo]
+
+run = [False]
+throttle_speed_mult = 0
 
 def single_player():
     print("Run Solo Game")
 
 def remote_control():
     print("Multiplayer")
+    
+    while run[0]:#change to true
+        right_command = False
+        left_command = False
+        
+        
+        #take user input here to change right/left command
+        user_input()
 
+
+        #kit.motor1.throttle = throttle_speed_mult#negative throttle speed is right
+        #kit.motor2.throttle = throttle_speed_mult
+        if (throttle_speed_mult > 0):
+            print("moving left")
+        elif (throttle_speed_mult < 0):
+            print("moving left")
+        else:
+            print("not moving")
+
+def user_input():
+        variable = ""
+        if variable == "d" and throttle_speed_mult != -1:
+            throttle_speed_mult -= 1
+        elif variable == "a" and throttle_speed_mult != 1:
+            throttle_speed_mult += 1
+            
 class Application(tk.Frame):
+
+    direction = 0
+
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
@@ -45,12 +87,12 @@ class Application(tk.Frame):
 
   
     def passSingle(self):
-        
         single_player()
-        
-
+    
     def pass_remote(self):
-        remote_control()
+        self.direction = "d or a or something"
+        remote_control(self.direction)
+    
 
 
 root = tk.Tk()
