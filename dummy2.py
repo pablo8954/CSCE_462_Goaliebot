@@ -1,12 +1,12 @@
 #Libraries
-import RPi.GPIO as GPIO
-from gpiozero import LED
+# import RPi.GPIO as GPIO
+# from gpiozero import LED
 
-from adafruit_motorkit import MotorKit 
-import time
+# from adafruit_motorkit import MotorKit 
+# import time
 import tkinter as tk
 
-kit = MotorKit()
+# kit = MotorKit()
 
 #GPIO mode
 left_trig = 27
@@ -17,23 +17,21 @@ right_echo = 20
 
 button = 24
 
-red_left = LED(12)
-red_center = LED(16)
-green = LED(5)
+# red_left = LED(12)
+# red_center = LED(16)
+# green = LED(5)
 
 trig_chan = [left_trig, right_trig]
 echo_chan = [left_echo, right_echo]
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(trig_chan, GPIO.OUT)
-GPIO.setup(echo_chan, GPIO.IN)
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(trig_chan, GPIO.OUT)
+# GPIO.setup(echo_chan, GPIO.IN)
 
-# #button callback to turn robot on & off + GPIO setup
-GPIO.setup(button, GPIO.IN)
-GPIO.add_event_detect(button, GPIO.RISING)
-GPIO.add_event_callback(button, callButtonEventHandler)
-kit.motor1.throttle = 0
-kit.motor2.throttle = 0
+# #button callback to turn robot on & off
+# GPIO.setup(button, GPIO.IN)
+# GPIO.add_event_detect(button, GPIO.RISING)
+# GPIO.add_event_callback(button, callButtonEventHandler)
 
 run = [False]
 isSinglePlayer = False
@@ -103,53 +101,54 @@ left - good, positive direction
     #         kit.motor2.throttle = 0
 
 
-def readings(index):
-    GPIO.output(trig_chan[index], False) #let sensors settle
-    GPIO.output(trig_chan[index], True)  
-    time.sleep(0.01)
-    GPIO.output(trig_chan[index], False) 
+# def readings(index):
+#     GPIO.output(trig_chan[index], False) #let sensors settle
+#     GPIO.output(trig_chan[index], True)  
+#     time.sleep(0.01)
+#     GPIO.output(trig_chan[index], False) 
 
-    pulse_start = 0
-    pulse_end = 0
-    while_loop_flag = 0
+#     pulse_start = 0
+#     pulse_end = 0
+#     while_loop_flag = 0
 
-    while GPIO.input(echo_chan[index]) == 0:
-        pulse_start = time.time()
-        while_loop_flag = while_loop_flag + 1
+#     while GPIO.input(echo_chan[index]) == 0:
+#         pulse_start = time.time()
+#         while_loop_flag = while_loop_flag + 1
         
-    while GPIO.input(echo_chan[index]) == 1:
-        pulse_end = time.time()
-        while_loop_flag = while_loop_flag + 1
+#     while GPIO.input(echo_chan[index]) == 1:
+#         pulse_end = time.time()
+#         while_loop_flag = while_loop_flag + 1
 
-    if while_loop_flag > 1:
-        pulse_duration = pulse_end - pulse_start
-        distance = pulse_duration * 171250
-        distance = round(distance, 2)/10
+#     if while_loop_flag > 1:
+#         pulse_duration = pulse_end - pulse_start
+#         distance = pulse_duration * 171250
+#         distance = round(distance, 2)/10
 
-    else:   
-        distance = -1
+#     else:   
+#         distance = -1
 
-    return distance
+#     return distance
 
 #pauses single player (either turn on or off)
-def callButtonEventHandler(pin):   
-    #countdown to start only if device is being turned on
-    if run[0] == False:
-        # 6 seconds to get into position
-        green.off()
-        red_left.on()
-        time.sleep(2)
+# def callButtonEventHandler(pin): 
+    
+#     #countdown to start only if device is being turned on
+#     if run[0] == False:
+#         # 6 seconds to get into position
+#         green.off()
+#         red_left.on()
+#         time.sleep(2)
 
-        red_left.off()
-        red_center.on()
-        time.sleep(2)
+#         red_left.off()
+#         red_center.on()
+#         time.sleep(2)
         
-        red_center.off()
-        green.on()
-        time.sleep(2)
+#         red_center.off()
+#         green.on()
+#         time.sleep(2)
 
-    #set flag to opposite (either turn on or off)
-    run[0] = not run[0]
+#     #set flag to opposite (either turn on or off)
+#     run[0] = not run[0]
 
 
 class Application(tk.Frame):
@@ -181,64 +180,12 @@ class Application(tk.Frame):
         self.quit = tk.Button(self, borderwidth = "5", text="QUIT", fg="red",command=self.close_program)
         self.quit.grid(row = 3, column = 2, ipadx = "25", ipady = "15")
 
-
-    def single_playerFun(self):
-        global isSinglePlayer
-
-        if isSinglePlayer and run[0]:
-            throttle_speed = 1.0
-
-            left_val = readings(0)
-            right_val = readings(1)
-
-            print("Left: ", left_val)
-            print("Right: ", right_val)
-
-            left_sees_ball = False
-            right_sees_ball = False
-
-            if (right_val > 1750):
-                right_sees_ball = True
-            if (left_val > 1750):
-                left_sees_ball = True
-
-            if (left_val < 150):
-                left_sees_ball = True
-            if (right_val < 150):
-                right_sees_ball = True
-
-            #bad reading from ultrasonic sensors - try again & skip to end
-            if (right_val > 0 or left_val > 0):
-                #case 1 - when the ball is in the center - either both sensors read the ball or read nothing in front
-                if (right_sees_ball and left_sees_ball) or (not right_sees_ball and not left_sees_ball):
-                    kit.motor1.throttle = 0
-                    kit.motor2.throttle = 0
-                    print("standing still")
-
-                #case 2 - ball is in front of right sensor -> strafe right
-                elif right_sees_ball:
-                    kit.motor1.throttle = -throttle_speed
-                    kit.motor2.throttle = -throttle_speed
-                    print("moving right")
-                
-                #case 3 - ball is in right of left sensor -> strafe left
-                elif left_sees_ball:
-                    kit.motor1.throttle = throttle_speed
-                    kit.motor2.throttle = throttle_speed
-                    print("moving left")
-
-        #button interrupt
-        elif run[0] == False:
-            kit.motor1.throttle = 0
-            kit.motor2.throttle = 0
-
-        self.master.after(100, self.single_playerFun)
   
     def passSingle(self):
         global isSinglePlayer
         if (isSinglePlayer == False):
             isSinglePlayer = True
-            self.master.after(100, self.single_playerFun)
+            self.master.after(1000, single_player)
     
     def setRemote(self):
         global isSinglePlayer
@@ -256,22 +203,28 @@ class Application(tk.Frame):
 
             #set motor movements
             print("Direction", self.direction)
-            kit.motor1.throttle = self.direction
-            kit.motor2.throttle = self.direction
+            # kit.motor1.throttle = self.direction
+            # kit.motor2.throttle = self.direction
 
-
+    def single_player(self):
+        global isSinglePlayer
+        if isSinglePlayer:
+            print("SINGLE PLAYER")
+        else:
+            isSinglePlayer = False
+        self.master.after(1000, single_player)
 
     #quit
     def close_program(self):
 
-        #turn off motors
-        kit.motor1.throttle = 0
-        kit.motor2.throttle = 0
+        # #turn off motors
+        # kit.motor1.throttle = 0
+        # kit.motor2.throttle = 0
 
         # #turn off all LEDs
-        green.off()
-        red_center.off()
-        red_left.off()
+        # green.off()
+        # red_center.off()
+        # red_left.off()
 
         #close gui
         self.master.destroy()
