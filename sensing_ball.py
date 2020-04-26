@@ -206,26 +206,29 @@ class Application(tk.Frame):
         self.master.destroy()
 
 
+def main():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(trig_chan, GPIO.OUT)
+    GPIO.setup(echo_chan, GPIO.IN)
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(trig_chan, GPIO.OUT)
-GPIO.setup(echo_chan, GPIO.IN)
+    # #button callback to turn robot on & off + GPIO setup
+    GPIO.setup(button, GPIO.IN)
+    GPIO.add_event_detect(button, GPIO.RISING)
+    GPIO.add_event_callback(button, callButtonEventHandler)
+    kit.motor1.throttle = 0
+    kit.motor2.throttle = 0
 
-# #button callback to turn robot on & off + GPIO setup
-GPIO.setup(button, GPIO.IN)
-GPIO.add_event_detect(button, GPIO.RISING)
-GPIO.add_event_callback(button, callButtonEventHandler)
-kit.motor1.throttle = 0
-kit.motor2.throttle = 0
+    root = tk.Tk()
+    root.title("GoalieBot")
+    root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file='img/ball.png'))
 
-root = tk.Tk()
-root.title("GoalieBot")
-root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file='img/ball.png'))
+    #sets window size on screen
+    root.geometry("400x300")
+    # root.grid_rowconfigure(2, minsize=400)
+    root.grid_columnconfigure(2, minsize=400)
 
-#sets window size on screen
-root.geometry("400x300")
-# root.grid_rowconfigure(2, minsize=400)
-root.grid_columnconfigure(2, minsize=400)
+    app = Application(master=root)
+    app.mainloop()
 
-app = Application(master=root)
-app.mainloop()
+if __name__=="__main__":
+    main()
