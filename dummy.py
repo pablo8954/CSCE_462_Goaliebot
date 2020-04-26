@@ -24,16 +24,7 @@ green = LED(5)
 trig_chan = [left_trig, right_trig]
 echo_chan = [left_echo, right_echo]
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(trig_chan, GPIO.OUT)
-GPIO.setup(echo_chan, GPIO.IN)
 
-# #button callback to turn robot on & off + GPIO setup
-GPIO.setup(button, GPIO.IN)
-GPIO.add_event_detect(button, GPIO.RISING)
-GPIO.add_event_callback(button, callButtonEventHandler)
-kit.motor1.throttle = 0
-kit.motor2.throttle = 0
 
 run = [False]
 isSinglePlayer = False
@@ -43,65 +34,6 @@ right - broken, negative direction
 left - good, positive direction
 
 """
-# def single_player(root):
-#     if isSinglePlayer:
-#         print("SINGLE PLAYER")
-    
-#     root.after(1000, single_player(root))
-    # #be default, motors are off
-    # kit.motor1.throttle = 0
-    # kit.motor2.throttle = 0
-
-    # while isSinglePlayer:
-    #     if run[0] == True:
-    #         throttle_speed = 1.0
-
-    #         left_val = readings(0)
-    #         right_val = readings(1)
-
-    #         print("Left: ", left_val)
-    #         print("Right: ", right_val)
-
-    #         left_sees_ball = False
-    #         right_sees_ball = False
-
-    #         if (right_val > 1750):
-    #             right_sees_ball = True
-    #         if (left_val > 1750):
-    #             left_sees_ball = True
-
-    #         if (left_val < 150):
-    #             left_sees_ball = True
-    #         if (right_val < 150):
-    #             right_sees_ball = True
-
-    #         #bad reading from ultrasonic sensors - try again
-    #         if (right_val < 0 or left_val < 0):
-    #             break               
-
-    #         #case 1 - when the ball is in the center - either both sensors read the ball or read nothing in front
-    #         elif (right_sees_ball and left_sees_ball) or (not right_sees_ball and not left_sees_ball):
-    #             kit.motor1.throttle = 0
-    #             kit.motor2.throttle = 0
-    #             print("standing still")
-
-    #         #case 2 - ball is in front of right sensor -> strafe right
-    #         elif right_sees_ball:
-    #             kit.motor1.throttle = -throttle_speed
-    #             kit.motor2.throttle = -throttle_speed
-    #             print("moving right")
-            
-    #         #case 3 - ball is in right of left sensor -> strafe left
-    #         elif left_sees_ball:
-    #             kit.motor1.throttle = throttle_speed
-    #             kit.motor2.throttle = throttle_speed
-    #             print("moving left")
-
-    #     #button interrupt
-    #     elif run[0] == False:
-    #         kit.motor1.throttle = 0
-    #         kit.motor2.throttle = 0
-
 
 def readings(index):
     GPIO.output(trig_chan[index], False) #let sensors settle
@@ -259,11 +191,8 @@ class Application(tk.Frame):
             kit.motor1.throttle = self.direction
             kit.motor2.throttle = self.direction
 
-
-
     #quit
     def close_program(self):
-
         #turn off motors
         kit.motor1.throttle = 0
         kit.motor2.throttle = 0
@@ -277,6 +206,17 @@ class Application(tk.Frame):
         self.master.destroy()
 
 
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(trig_chan, GPIO.OUT)
+GPIO.setup(echo_chan, GPIO.IN)
+
+# #button callback to turn robot on & off + GPIO setup
+GPIO.setup(button, GPIO.IN)
+GPIO.add_event_detect(button, GPIO.RISING)
+GPIO.add_event_callback(button, callButtonEventHandler)
+kit.motor1.throttle = 0
+kit.motor2.throttle = 0
 
 root = tk.Tk()
 root.title("GoalieBot")
