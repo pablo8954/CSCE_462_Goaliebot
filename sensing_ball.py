@@ -1,4 +1,4 @@
-#Libraries
+# Libraries
 import RPi.GPIO as GPIO
 from gpiozero import LED
 
@@ -58,6 +58,7 @@ def readings(index):
         distance = pulse_duration * 171250
         distance = round(distance, 2)/10
 
+    #bad reading occurs, return negative
     else:   
         distance = -1
 
@@ -93,12 +94,13 @@ class Application(tk.Frame):
         self.pack()
         self.create_widgets()
 
+        # input of "a" moves robot right, input of "d" moves robot left (designed with controller's position facing robot head on)
         self.master.bind("a", lambda event: self.remote_control(event, left = False))
         self.master.bind("d", lambda event: self.remote_control(event, left = True))
     
     #initialize window widgets
     def create_widgets(self):
-        # self.winfo_toplevel.title("Goalie Bot")
+        self.winfo_toplevel.title("Goalie Bot")
 
         self.single_player = tk.Button(self, borderwidth = "5");
         self.single_player["text"] = "Single Player"
@@ -129,6 +131,7 @@ class Application(tk.Frame):
             left_sees_ball = False
             right_sees_ball = False
 
+            # 
             if (right_val > 1750):
                 right_sees_ball = True
             if (left_val > 1750):
@@ -139,25 +142,22 @@ class Application(tk.Frame):
             if (right_val < 150):
                 right_sees_ball = True
 
-            #bad reading from ultrasonic sensors - try again & skip to end
+            #bad reading from ultrasonic sensors if either valye is negative
             if (right_val > 0 or left_val > 0):
                 #case 1 - when the ball is in the center - either both sensors read the ball or read nothing in front
                 if (right_sees_ball and left_sees_ball) or (not right_sees_ball and not left_sees_ball):
                     kit.motor1.throttle = 0
                     kit.motor2.throttle = 0
-                    print("standing still")
 
                 #case 2 - ball is in front of right sensor -> strafe right
                 elif right_sees_ball:
                     kit.motor1.throttle = -throttle_speed
                     kit.motor2.throttle = -throttle_speed
-                    print("moving right")
                 
                 #case 3 - ball is in right of left sensor -> strafe left
                 elif left_sees_ball:
                     kit.motor1.throttle = throttle_speed
                     kit.motor2.throttle = throttle_speed
-                    print("moving left")
 
         #button interrupt
         elif run[0] == False:
@@ -174,7 +174,6 @@ class Application(tk.Frame):
     
     def setRemote(self):
         global isSinglePlayer
-        print("Set Multiplayer")
         isSinglePlayer = False
 
     def remote_control(self, event, left):
@@ -187,7 +186,6 @@ class Application(tk.Frame):
                 self.direction = self.direction - 1
 
             #set motor movements
-            print("Direction", self.direction)
             kit.motor1.throttle = self.direction
             kit.motor2.throttle = self.direction
 
@@ -197,7 +195,7 @@ class Application(tk.Frame):
         kit.motor1.throttle = 0
         kit.motor2.throttle = 0
 
-        # #turn off all LEDs
+        #turn off all LEDs
         green.off()
         red_center.off()
         red_left.off()
@@ -224,7 +222,6 @@ def main():
 
     #sets window size on screen
     root.geometry("400x300")
-    # root.grid_rowconfigure(2, minsize=400)
     root.grid_columnconfigure(2, minsize=400)
 
     app = Application(master=root)
